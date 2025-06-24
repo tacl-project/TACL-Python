@@ -1,0 +1,76 @@
+# Example combining bare references and literal types
+
+# Application metadata
+app_name; string: "CloudSync"
+app_version; string: "3.2.1"
+app_stage; literal["alpha", "beta", "rc", "stable"]: "stable"
+
+# Server configuration with literals
+server_port; literal[3000, 5000, 8080, 9000]: 8080
+server_protocol; literal["http", "https", "ws", "wss"]: "https"
+server_region; literal["us-east", "us-west", "eu-central", "asia-pacific"]: "us-east"
+
+# Database configuration
+db_type; literal["postgres", "mysql", "mongodb", "redis"]: "postgres"
+db_host; string: "db.internal"
+db_port; literal[3306, 5432, 27017, 6379]: 5432
+db_pool_size; literal[5, 10, 20, 50, 100]: 20
+
+# Connection string must be literal - no interpolation
+db_connection; string: "postgres://db.internal:5432/cloudsync"
+
+# Feature flags with literals
+features; dict[string, bool]:
+  auth_enabled: true,
+  cache_enabled: true,
+  metrics_enabled: false
+
+# Log configuration
+log_config; dict[string, union[string,list[string]]]: 
+  level: "info",
+  format: "json",
+  outputs: 
+  - "stdout" 
+  - "file"
+
+# Valid log levels using literal
+log_level; literal["trace", "debug", "info", "warn", "error"]: &log_config.level
+
+# Environment-specific overrides
+environments; dict[string, dict[string, object]]:
+  development:
+    port: 3000,
+    log_level: "debug",
+    db_pool_size: 5
+  production:
+    port: &server_port,
+    log_level: &log_level,
+    db_pool_size: &db_pool_size
+
+# Current environment settings using bare references
+current_env; literal["development", "staging", "production"]: "production"
+current_settings; dict[string, object]: &environments.production
+
+# API endpoint must be literal - no interpolation  
+api_base; string: "https://api.us-east.example.com:8080/v3.2.1"
+
+# Health check configuration
+health_check; dict[string, object]:
+  enabled: &features.metrics_enabled,
+  endpoint: "/health",
+  interval_seconds: 30,
+  timeout_seconds: 5,
+  failure_threshold: 3
+
+# Deployment configuration mixing literals and references
+deployment; dict[string, object]:
+  stage: &app_stage,
+  region: &server_region,
+  replicas: 3,
+  resources:
+    cpu_limit: "500m",
+    memory_limit: "1Gi",
+    storage_type: "ssd"
+
+# Storage type must be one of the allowed values
+storage_class; literal["ssd", "hdd", "nvme", "network"]: &deployment.resources.storage_type

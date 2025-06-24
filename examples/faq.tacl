@@ -1,0 +1,122 @@
+# FAQ.tacl - TACL Frequently Asked Questions
+
+@type Question:
+  q; string
+  a; string
+  tags; optional[list[string]]
+
+@type Category:
+  name; string
+  description; string
+  questions; list[Question]
+
+# Core motivation
+motivation; Question:
+  q; string: "Why create another config language?"
+  a; string: "I love YAML's readability but hate debugging 'cannot unmarshal bool into Go struct field' errors at 2 AM"
+  tags; list[string]: ["motivation", "debugging"]
+
+# Comparison questions
+yaml_comparison; Question:
+  q; string: "Is TACL better than YAML?"
+  a; string: &motivation.a
+
+toml_comparison; Question:
+  q; string: "How does TACL compare to TOML?"
+  a; string: "TOML is great for simple configs, but TACL adds type safety, custom schemas, and references while still compiling to TOML when needed"
+  tags; list[string]: ["comparison", "toml"]
+
+json_comparison; Question:
+  q; string: "Why not just use JSON Schema?"
+  a; string: "JSON Schema is powerful but verbose. TACL gives you the safety with readable syntax that doesn't make your eyes bleed"
+  tags; list[string]: ["comparison", "json-schema"]
+
+# Technical questions
+compilation; Question:
+  q; string: "Does TACL add runtime dependencies?"
+  a; string: "Nope! TACL compiles to standard YAML/JSON/TOML. Your apps never know TACL existed"
+  tags; list[string]: ["technical", "runtime"]
+
+performance; Question:
+  q; string: "Is there a performance penalty?"
+  a; string: "Compile-time type checking means faster runtime. No string parsing, no type coercion surprises"
+  tags; list[string]: ["technical", "performance"]
+  
+# Usage questions
+learning_curve; Question:
+  q; string: "How hard is it to learn TACL?"
+  a; string: "If you know YAML, you're 80% there. Just add types and enjoy fewer production incidents"
+  tags; list[string]: ["usage", "learning"]
+
+pronunciation; Question:
+  q; string: "How do you pronounce TACL?"
+  a; string: "It's 'TACKLE' - like tackling your configuration problems, not T-A-C-L"
+  tags; list[string]: ["usage", "pronunciation"]
+
+migration; Question:
+  q; string: "Can I migrate existing YAML files?"
+  a; string: "Yes! Start by adding types to catch existing bugs, then gradually use custom types and references"
+  tags; list[string]: ["usage", "migration"]
+
+tooling; Question:
+  q; string: "What about IDE support?"
+  a; string: "Type definitions enable autocomplete, validation, and better error messages in any editor"
+  tags; list[string]: ["tooling", "ide"]
+
+# Ecosystem questions
+kubernetes; Question:
+  q; string: "Does this work with Kubernetes?"
+  a; string: "Absolutely! Write type-safe TACL, compile to YAML, deploy with kubectl/helm like always"
+  tags; list[string]: ["ecosystem", "kubernetes"]
+
+ci_cd; Question:
+  q; string: "How does this fit in CI/CD?"
+  a; string: "Add 'tacl compile' to your pipeline. Catch config errors before they reach production"
+  tags; list[string]: ["ecosystem", "ci-cd"]
+
+# Skeptical questions
+necessary; Question:
+  q; string: "Is this really necessary?"
+  a; string: "Ever spent hours debugging why your service won't start because 'enabled: 0' became 'enabled: false'? Then yes"
+  tags; list[string]: ["skeptical", "debugging"]
+
+xkcd_standards; Question:
+  q; string: "Aren't you just creating another standard?"
+  a; string: "Fair point! But TACL compiles to existing standards, so it's more like TypeScript for config files"
+  tags; list[string]: ["skeptical", "standards"]
+
+# Categories for organization
+categories; list[Category]: [
+  {
+    name: "General",
+    description: "Basic questions about TACL",
+    questions: [&motivation, &yaml_comparison, &learning_curve]
+  },
+  {
+    name: "Technical", 
+    description: "How TACL works under the hood",
+    questions: [&compilation, &performance, &tooling]
+  },
+  {
+    name: "Ecosystem",
+    description: "Using TACL with existing tools",
+    questions: [&kubernetes, &ci_cd, &migration]
+  },
+  {
+    name: "Comparisons",
+    description: "How TACL relates to other formats",
+    questions: [&toml_comparison, &json_comparison]
+  },
+  {
+    name: "Skeptics Corner",
+    description: "For the 'why do we need this' crowd",
+    questions: [&necessary, &xkcd_standards]
+  }
+]
+
+# Meta information
+meta; dict[string, union[string, int]]:
+  version; string: "1.0"
+  last_updated; string: "2025-06-03"
+  total_questions; int: 12
+  maintainer; string: "TACL Team"

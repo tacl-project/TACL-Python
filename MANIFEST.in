@@ -1,0 +1,10 @@
+include LICENSE
+include README.md
+include pyproject.toml
+recursive-include src/tacl *.py
+recursive-include tests *.py
+recursive-include examples *.tacl
+exclude .gitignore
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude .DS_Store

@@ -1,0 +1,39 @@
+# Example demonstrating bare & references (no quotes)
+
+# Define base values
+app_name; string: "TACL Demo"
+version; string: "2.0.0"
+port; int: 8080
+debug_mode; bool: true
+
+# Bare references - no quotes around the & reference
+current_app; string: &app_name
+current_version; string: &version
+service_port; int: &port
+is_debug; bool: &debug_mode
+
+# Direct value references only - no string interpolation
+# These would be INVALID - TACL doesn't support string interpolation
+# welcome_message; string: "Welcome to &app_name version &version"  # INVALID
+# connection_url; string: "http://localhost:&port/api"  # INVALID
+
+# Nested object with references - direct value mapping only
+config; dict[string, string]: {
+  name: &app_name,
+  version: &version,
+  url: "http://localhost:8080"  # Must be literal, no interpolation
+}
+
+# Array with references
+all_ports; list[int]: [&port, 8081, 8082]
+primary_port; int: &all_ports[0]
+
+# Complex nested reference
+nested_config; dict[string, object]: {
+  app: {name: &app_name, version: &version},
+  server: {port: &port, debug: &debug_mode}
+}
+
+# Direct reference to nested value - must be exact type match
+app_name_copy; string: &nested_config.app.name
+app_version_copy; string: &nested_config.app.version

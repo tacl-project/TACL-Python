@@ -1,0 +1,49 @@
+# Example demonstrating bare & references (no quotes)
+# IMPORTANT: TACL only supports direct value mapping, NOT string interpolation
+
+# Define base values
+app_name; string: "TACL Demo"
+version; string: "2.0.0"
+port; int: 8080
+debug_mode; bool: true
+base_url; string: "http://localhost:8080"
+
+# Direct value references - entire value is replaced
+current_app; string: &app_name              # "TACL Demo"
+current_version; string: &version           # "2.0.0"
+service_port; int: &port                    # 8080
+is_debug; bool: &debug_mode                 # true
+api_endpoint; string: &base_url             # "http://localhost:8080"
+
+# Nested object with references
+config; dict[string, object]: {
+  name: &app_name,
+  version: &version,
+  port: &port,
+  debug: &debug_mode
+}
+
+# Array with references
+ports; list[int]: [&port, 8081, 8082]      # [8080, 8081, 8082]
+primary_port; int: &ports[0]               # 8080
+
+# Complex nested structure
+nested_config; dict[string, dict[string, object]]: {
+  app: {name: &app_name, version: &version},
+  server: {port: &port, debug: &debug_mode}
+}
+
+# Direct reference to nested values - must match types exactly
+app_name_from_nested; string: &nested_config.app.name      # "TACL Demo"
+server_port_from_nested; int: &nested_config.server.port   # 8080
+
+# List of configurations
+environments; list[dict[string, object]]: [
+  {name: "dev", port: 3000, debug: true},
+  {name: "staging", port: 8000, debug: false},
+  {name: "prod", port: &port, debug: false}
+]
+
+# Reference to specific array element property
+first_env_name; string: &environments[0].name    # "dev"
+prod_env_port; int: &environments[2].port        # 8080

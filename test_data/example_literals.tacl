@@ -1,0 +1,42 @@
+# Example demonstrating literal[] syntax for constrained values
+
+# String literals - only specific strings allowed
+environment; literal["development", "staging", "production"]: "production"
+log_level; literal["trace", "debug", "info", "warn", "error", "fatal"]: "info"
+region; literal["us-east-1", "us-west-2", "eu-west-1", "ap-southeast-1"]: "us-east-1"
+
+# Integer literals - only specific numbers allowed
+http_port; literal[80, 443, 8080, 8443]: 8080
+max_connections; literal[10, 50, 100, 500, 1000]: 100
+retry_count; literal[0, 1, 3, 5]: 3
+
+# Float literals - only specific decimal values allowed
+cpu_threshold; literal[0.5, 0.75, 0.9, 0.95]: 0.75
+memory_limit_gb; literal[0.5, 1.0, 2.0, 4.0, 8.0]: 2.0
+timeout_seconds; literal[0.1, 0.5, 1.0, 5.0, 30.0]: 5.0
+
+# Boolean literals (though less common, still valid)
+feature_flag; literal[true]: true
+always_false; literal[false]: false
+
+# Using literals with references
+default_env; literal["dev", "test", "prod"]: "dev"
+current_env; literal["dev", "test", "prod"]: &default_env
+
+# Literals in complex structures
+server_config; dict[string, object]: {
+  environment: &environment,
+  port: &http_port,
+  log_level: &log_level,
+  max_connections: &max_connections
+}
+
+# Array of configs with literal constraints
+deployment_stages; list[dict[string, object]]: [
+  {name: "dev", port: 8080, log_level: "debug"},
+  {name: "staging", port: 8443, log_level: "info"},
+  {name: "prod", port: 443, log_level: "warn"}
+]
+
+# Each stage name must be from the literal set
+stage_name; literal["dev", "staging", "prod"]: &deployment_stages[0].name

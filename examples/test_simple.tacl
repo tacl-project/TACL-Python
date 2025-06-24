@@ -1,0 +1,44 @@
+# Simple TACL test file
+
+# Basic types
+app_name; string: "TACL Demo"
+version; string: "1.0.0"
+port; int: 8080
+debug; bool: true
+
+# Literal type
+environment; literal["dev", "staging", "prod"]: "prod"
+log_level; literal["debug", "info", "warn", "error"]: "info"
+
+# Union type  
+timeout; union[int, null]: 30
+retry_count; union[int, null]: null
+
+# Optional type
+description; optional[string]: "A demo application"
+notes; optional[string]: null
+
+# References
+app_title; string: &app_name
+service_port; int: &port
+
+# List
+features; list[string]: ["auth", "logging", "metrics"]
+
+# Dictionary
+config; dict[string, string]: {"host": "localhost", "user": "admin"}
+
+# Custom type definition
+@type Server:
+  host; string
+  port; int
+  ssl; bool
+
+# Using custom type
+web_server; Server:
+  host; string: "example.com"
+  port; int: 443
+  ssl; bool: true
+
+# Reference to custom type field
+server_host; string: &web_server.host
